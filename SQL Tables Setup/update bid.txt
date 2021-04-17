@@ -1,0 +1,24 @@
+CREATE OR REPLACE FUNCTION updateBid()
+RETURNS TRIGGER AS $$
+DECLARE
+  tEmail VARCHAR(64) ;
+  tSubmissiondatetime integer;
+
+BEGIN
+  tEmail := NEW.email;
+  tSubmissiondatetime := NEW.submission_datetime;
+
+  IF NEW.task_status = 'cancelled' THEN
+    UPDATE public.bid_task SET bid_status = 'lost'
+    WHERE tasker_email = tEmail
+    AND submission_datetime = tSubmissiondatetime;
+  END IF;
+RETURN NULL;
+END; $$
+LANGUAGE PLPGSQL;
+
+
+CREATE TRIGGER update_bid
+AFTER UPDATE ON task_submission
+FOR EACH ROW
+EXECUTE PROCEDURE updateBid();

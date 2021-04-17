@@ -1,0 +1,19 @@
+CREATE OR REPLACE FUNCTION logTask()
+RETURNS TRIGGER AS $$
+BEGIN
+IF NEW.task_status = 'cancelled' THEN
+INSERT INTO log_task(log_name,log_location,log_task_datetime,log_tasker_email,log_max_amt,log_deadline,log_submission_datetime,log_task_status,log_task_doer)
+VALUES(OLD.name,OLD.location,OLD.task_datetime,OLD.email,OLD.max_amt,OLD.deadline,OLD.submission_datetime,'cancelled',OLD.task_doer);
+ELSIF NEW.task_status = 'confirmed' THEN 
+INSERT INTO log_task(log_name,log_location,log_task_datetime,log_tasker_email,log_max_amt,log_deadline,log_submission_datetime,log_task_status,log_task_doer)
+VALUES(OLD.name,OLD.location,OLD.task_datetime,OLD.email,OLD.max_amt,OLD.deadline,OLD.submission_datetime,'confirmed',OLD.task_doer);
+END IF;
+RETURN NULL;
+END; $$
+LANGUAGE PLPGSQL;
+
+
+CREATE TRIGGER log_task
+AFTER UPDATE OR DELETE ON task_submission
+FOR EACH ROW
+EXECUTE PROCEDURE logTask();

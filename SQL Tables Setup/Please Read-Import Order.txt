@@ -1,0 +1,6 @@
+Please import in the order specified to avoid issues.
+1. user_info.sql
+2. status.sql
+3. sign_in.sql
+4. task_submission.sql
+5. bid_task.sql

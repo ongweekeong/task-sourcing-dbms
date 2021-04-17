@@ -1,0 +1,9 @@
+CREATE TABLE user_info (
+	full_name VARCHAR(128) NOT NULL,
+	display_name VARCHAR(32) NOT NULL,
+	phone_number NUMERIC NOT NULL,
+	email VARCHAR(64) PRIMARY KEY,
+	password VARCHAR(32) NOT NULL,
+	isadmin BOOLEAN NOT NULL DEFAULT FALSE,
+);
+

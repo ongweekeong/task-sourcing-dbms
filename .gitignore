@@ -1,0 +1,14 @@
+# Generated class files
+*.class
+
+# Default data file
+constants.php
+
+# Idea files
+.idea/
+*.iml
+out/
+test/data/
+/bin/
+/data/
+publish.sh

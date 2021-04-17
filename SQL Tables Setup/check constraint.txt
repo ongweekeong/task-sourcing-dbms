@@ -1,0 +1,39 @@
+CREATE OR REPLACE FUNCTION checkConstraint()
+RETURNS TRIGGER AS $$
+
+DECLARE
+  submissiondatetime TIMESTAMP;
+BEGIN
+  submissiondatetime := to_timestamp(NEW.submission_datetime);
+
+  IF (NEW.name = null) THEN
+    RAISE EXCEPTION 'variables not allowed null values';
+  ELSIF (NEW.location = null) THEN
+    RAISE EXCEPTION 'variables not allowed null values';
+  ELSIF (NEW.task_datetime = null) THEN
+    RAISE EXCEPTION 'variables not allowed null values';
+  ELSIF (NEW.submission_datetime = null) THEN
+    RAISE EXCEPTION 'variables not allowed null values';
+  ELSIF (NEW.task_status = null) THEN
+    RAISE EXCEPTION 'variables not allowed null values';
+  ELSIF (NEW.email = null) THEN
+    RAISE EXCEPTION 'variables not allowed null values';
+  ELSIF (NEW.task_status = null) THEN 
+    RAISE EXCEPTION 'variables not allowed null values';
+
+  ELSIF(NEW.task_datetime > NEW.end_datetime) THEN
+    RAISE EXCEPTION 'invalid time input';
+  ELSIF (NEW.deadline > NEW.task_datetime) THEN
+    RAISE EXCEPTION 'invalid time input';
+  ELSIF (NEW.deadline < submissiondatetime) THEN
+    RAISE EXCEPTION 'invalid time input';
+
+  END IF;
+RETURN NEW;
+END; $$
+LANGUAGE PLPGSQL;
+
+CREATE TRIGGER check_constraint
+BEFORE UPDATE OR INSERT ON task_submission
+FOR EACH ROW
+EXECUTE PROCEDURE checkConstraint();
